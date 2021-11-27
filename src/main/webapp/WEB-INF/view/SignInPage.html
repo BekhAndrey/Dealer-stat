@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>SIGN IN</h1>
+<form method="post" th:action="@{/sign-in}" th:object="${user}">
+
+    <label for="email">Email</label>
+    <input id="email" type="text" th:field="*{email}">
+
+    <br>
+    <label for="password">Password</label>
+    <input id="password" type="text" th:field="*{password}">
+
+    <br>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit"
+                       name="login-submit"
+                       id="login-submit"
+                       class="form-control btn btn-info"
+                       value="Sign In">
+            </div>
+        </div>
+    </div>
+</form>
+<a href="http://localhost:8888/dealer-stat/sign-up">
+    <button>Sign Up</button>
+</a>
+</body>
+</html>

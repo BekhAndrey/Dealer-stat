@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>SIGN UP</h2>
+<form method="post" th:action="@{/sign-up}" th:object="${user}">
+
+    <label for="firstName">First Name</label>
+    <input id="firstName" type="text" th:field="*{firstName}">
+
+    <br>
+
+    <label for="lastName">Last Name</label>
+    <input id="lastName" type="text" th:field="*{lastName}">
+
+    <br>
+
+    <label for="email">Email</label>
+    <input id="email" type="text" th:field="*{email}">
+
+    <br>
+
+    <label for="password">Password</label>
+    <input id="password" type="text" th:field="*{password}">
+
+    <br>
+
+    <label for="role">Role</label>
+    <select id="role" required th:field="*{role}">
+        <option th:each="role : ${T(com.bekh.dealerstat.model.UserRole).values()}"
+                th:if = "${role ne T(com.bekh.dealerstat.model.UserRole).ADMIN}"
+                th:value="${role}"
+                th:text="${role}">
+        </option>
+    </select>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit"
+                       name="login-submit"
+                       id="login-submit"
+                       class="form-control btn btn-info"
+                       value="Sign In">
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

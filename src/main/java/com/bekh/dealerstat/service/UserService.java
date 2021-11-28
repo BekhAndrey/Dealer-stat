@@ -15,15 +15,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findUserByEmail(String email){ return userRepository.findUserByEmail(email); }
-
-    public List<User> findAll(){
-        return  (List<User>) userRepository.findAll();
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
-    public User findById(Long id) { return userRepository.findById(id).orElse(null);}
+    public User findUserByEmailAndPassword(String email, String password) {
+        return userRepository.findUserByEmailAndPassword(email, password);
+    }
 
-    public void save(User user) { userRepository.save(user);}
+    public List<User> findAll() {
+        return (List<User>) userRepository.findAll();
+    }
 
-    public void delete(User user) { userRepository.delete(user);}
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
 }

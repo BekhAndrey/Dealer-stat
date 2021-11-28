@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -7,6 +7,8 @@
 <body>
 <h1>SIGN IN</h1>
 <form method="post" th:action="@{/sign-in}" th:object="${user}">
+
+    <div style="color: red" th:if="${#fields.hasErrors()}">Incorrect email or password.</div>
 
     <label for="email">Email</label>
     <input id="email" type="text" th:field="*{email}">

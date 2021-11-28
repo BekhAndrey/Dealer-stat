@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -35,9 +36,15 @@ public class User {
     private String password;
 
     @Column(name = "created_at")
-    private LocalDate creationDate = LocalDate.now();
+    private LocalDate createdAt = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<GameObject> gameObjects;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Comment> comments;
 }
 

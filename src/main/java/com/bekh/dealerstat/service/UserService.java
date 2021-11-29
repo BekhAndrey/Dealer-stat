@@ -5,11 +5,13 @@ import com.bekh.dealerstat.model.Game;
 import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@Service
+@Service("userService")
 public class UserService {
 
     @Autowired
@@ -28,7 +30,7 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
     }
 
     public void save(User user) {

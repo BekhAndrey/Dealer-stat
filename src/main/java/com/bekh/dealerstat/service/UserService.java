@@ -1,7 +1,5 @@
 package com.bekh.dealerstat.service;
 
-
-import com.bekh.dealerstat.model.Game;
 import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

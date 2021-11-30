@@ -6,14 +6,19 @@ import com.bekh.dealerstat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Controller
-public class FirstController {
+@SessionAttributes({"loggedUser"})
+public class LoginController {
 
     @Autowired
     private GameService gameService;
@@ -21,9 +26,14 @@ public class FirstController {
     @Autowired
     private UserService userService;
 
+    @ModelAttribute("loggedUser")
+    public User setUpUserForm() {
+        return new User();
+    }
+
     @GetMapping("/")
     public String home(){
-        return "redirect:sign-in";
+        return "redirect:/sign-in";
     }
 
     @GetMapping("/sign-in")
@@ -33,14 +43,12 @@ public class FirstController {
     }
 
     @PostMapping("/sign-in")
-    public String processSignIn(Model model, User user){
-        User loggedUser = userService.findUserByEmail(user.getEmail());
-        String result;
-        if(loggedUser!=null && user.getPassword().equals(loggedUser.getPassword())){
-            result="YES";
-        } else result="No";
-        model.addAttribute("result", result);
-        model.addAttribute("role", loggedUser.getRole());
+    public String processSignIn(Model model, User user, Errors errors){
+        if(userService.findUserByEmailAndPassword(user.getEmail(), user.getPassword())==null){
+            errors.reject("user.NotFound");
+            return "SignInPage";
+        }
+        model.addAttribute("loggedUser", userService.findUserByEmail(user.getEmail()));
         return "ResultTest";
     }
 
@@ -52,18 +60,14 @@ public class FirstController {
     }
 
     @PostMapping("/sign-up")
-    public String processSignUp(@ModelAttribute("user") User user){
-        String result;
+    public String processSignUp(@Valid User user, Errors errors){
         if(userService.findUserByEmail(user.getEmail())!=null){
-            return "redirect:sing-up";
+            errors.rejectValue("email", "email.notUnique", "This email is already in use.");
+        }
+        if(errors.hasErrors()){
+            return "SignUpPage";
         }
         userService.save(user);
         return "SignUpTest";
-    }
-
-    @GetMapping("/games")
-    public String getGames(Model model){
-        model.addAttribute("games", gameService.findAll());
-        return "Games";
     }
 }

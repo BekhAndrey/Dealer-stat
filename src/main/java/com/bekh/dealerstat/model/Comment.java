@@ -1,12 +1,17 @@
 package com.bekh.dealerstat.model;
 
 import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Comment {
 
     @Id
@@ -18,7 +23,13 @@ public class Comment {
     @Column(name="created_at")
     private LocalDate createdAt = LocalDate.now();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "author_id", nullable = false)
-    private User user;
+    private User author;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "trader_id", nullable = false)
+    private User trader;
+
+    private Boolean approved = false;
 }

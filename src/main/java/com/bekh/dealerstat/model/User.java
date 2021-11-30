@@ -1,6 +1,6 @@
 package com.bekh.dealerstat.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,7 +11,10 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +44,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<GameObject> gameObjects;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    private Set<Comment> createdComments;
+
+    @OneToMany(mappedBy = "trader", fetch = FetchType.EAGER)
+    private Set<Comment> receivedComments;
 }
 

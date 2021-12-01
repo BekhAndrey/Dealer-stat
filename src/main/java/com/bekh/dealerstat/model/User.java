@@ -44,7 +44,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private Set<GameObject> gameObjects;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)

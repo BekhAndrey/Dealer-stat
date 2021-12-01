@@ -1,6 +1,7 @@
 package com.bekh.dealerstat.service;
 
 import com.bekh.dealerstat.model.User;
+import com.bekh.dealerstat.model.UserRole;
 import com.bekh.dealerstat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,7 @@ public class UserService {
     public void delete(User user) {
         userRepository.delete(user);
     }
+
+    public List<User> findAllByRole(UserRole role) { return userRepository.findAllByRole(role);}
 
 }

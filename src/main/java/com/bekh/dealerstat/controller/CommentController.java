@@ -41,7 +41,6 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
         }
         model.addAttribute("comment", new Comment());
-        model.addAttribute("traderId", traderId);
         return "NewComment";
     }
 
@@ -64,8 +63,6 @@ public class CommentController {
         } else if (!commentToDelete.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         } else {
-            model.addAttribute("traderId", traderId);
-            model.addAttribute("commentId", commentId);
             return "ConfirmDelete";
         }
     }
@@ -87,8 +84,6 @@ public class CommentController {
         } else if (!commentToEdit.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         } else {
-            model.addAttribute("traderId", traderId);
-            model.addAttribute("commentId", commentId);
             model.addAttribute("comment", commentToEdit);
             return "EditComment";
         }

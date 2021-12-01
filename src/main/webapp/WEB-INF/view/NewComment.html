@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New comment</title>
+</head>
+<body>
+<form method="post" th:action="@{/users/{id}/comments(id = ${traderId})}" th:object="${comment}">
+
+<!--    <div style="color: red" th:if="${#fields.hasErrors()}">Incorrect email or password.</div>-->
+    <label for="message">Message</label>
+    <input id="message" type="text" th:field="*{message}">
+
+    <br>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit"
+                       name="add-comment-submit"
+                       id="add-comment"
+                       class="form-control btn btn-info"
+                       value="Add comment">
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+</head>
+<body>
+<h3>Trader comments</h3>
+<div th:each="comment: ${comments}">
+    <a th:href="@{/users/{traderId}/comments/{commentId}(traderId=${comment.getTrader().getId()}, commentId=${comment.getId()})}"
+       th:text="${comment.getMessage()}"/>
+</div>
+</body>
+</html>

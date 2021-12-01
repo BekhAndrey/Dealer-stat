@@ -6,7 +6,7 @@
 </head>
 <body>
 <form th:method="Put"
-      th:action="@{/users/{traderId}/comments/{commentId}(traderId=${traderId}, commentId=${commentId})}"
+      th:action="@{/users/{traderId}/comments/{commentId}(traderId=${traderId}, commentId=${id})}"
       th:object="${comment}">
     <label for="message">Message</label>
     <input id="message" type="text" th:field="*{message}">

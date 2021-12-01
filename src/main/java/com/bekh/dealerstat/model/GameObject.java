@@ -1,12 +1,15 @@
 package com.bekh.dealerstat.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "game_object")
 public class GameObject {
     @Id
@@ -17,13 +20,13 @@ public class GameObject {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "author_id", nullable = false)
-    private User user;
+    private User author;
 
     @Column(name = "created_at")
     private LocalDate createdAt = LocalDate.now();
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDate updatedAt = LocalDate.now();
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "game_id", nullable = false)

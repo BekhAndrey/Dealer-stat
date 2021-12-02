@@ -25,14 +25,14 @@ public class CommentController {
     @GetMapping()
     public String getTraderComments(@PathVariable("traderId") Long traderId, Model model) {
         model.addAttribute("comments", commentService.findAllByTraderId(userService.findById(traderId).getId()));
-        return "CommentsPage";
+        return "comment/CommentsPage";
     }
 
     @GetMapping("/{id}")
     public String getComment(@PathVariable("traderId") Long traderId,
                              @PathVariable("id") Long commentId, Model model) {
         model.addAttribute("comment", commentService.findByIdAndTraderId(commentId, userService.findById(traderId).getId()));
-        return "CommentPage";
+        return "comment/CommentPage";
     }
 
     @GetMapping("/add")
@@ -41,7 +41,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
         }
         model.addAttribute("comment", new Comment());
-        return "NewComment";
+        return "comment/NewComment";
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class CommentController {
         } else if (!commentToDelete.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         } else {
-            return "ConfirmDeleteComment";
+            return "comment/ConfirmDeleteComment";
         }
     }
 
@@ -85,7 +85,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         } else {
             model.addAttribute("comment", commentToEdit);
-            return "EditComment";
+            return "comment/EditComment";
         }
     }
 

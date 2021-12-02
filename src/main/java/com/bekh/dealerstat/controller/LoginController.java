@@ -6,7 +6,6 @@ import com.bekh.dealerstat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 
 @Controller
 @SessionAttributes({"loggedUser"})
@@ -39,14 +37,14 @@ public class LoginController {
     @GetMapping("/sign-in")
     public String signInPage(Model model){
         model.addAttribute("user", new User());
-        return "SignInPage";
+        return "login/SignInPage";
     }
 
     @PostMapping("/sign-in")
     public String processSignIn(Model model, User user, Errors errors){
         if(userService.findUserByEmailAndPassword(user.getEmail(), user.getPassword())==null){
             errors.reject("user.NotFound");
-            return "SignInPage";
+            return "login/SignInPage";
         }
         model.addAttribute("loggedUser", userService.findUserByEmail(user.getEmail()));
         return "ResultTest";
@@ -56,7 +54,7 @@ public class LoginController {
     @GetMapping("/sign-up")
     public String sighUpPage(Model model){
         model.addAttribute("user", new User());
-        return "SignUpPage";
+        return "login/SignUpPage";
     }
 
     @PostMapping("/sign-up")
@@ -65,7 +63,7 @@ public class LoginController {
             errors.rejectValue("email", "email.notUnique", "This email is already in use.");
         }
         if(errors.hasErrors()){
-            return "SignUpPage";
+            return "login/SignUpPage";
         }
         userService.save(user);
         return "SignUpTest";

@@ -1,6 +1,5 @@
 package com.bekh.dealerstat.controller;
 
-import com.bekh.dealerstat.model.Comment;
 import com.bekh.dealerstat.model.GameObject;
 import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.model.UserRole;
@@ -33,7 +32,7 @@ public class ObjectController {
     @GetMapping()
     public String getAllObjects(Model model){
         model.addAttribute("users", userService.findAllByRole(UserRole.TRADER));
-            return "AllGameObjects";
+            return "game-object/AllGameObjects";
     }
 
     @GetMapping("/add")
@@ -46,7 +45,7 @@ public class ObjectController {
         } else {
             model.addAttribute("game", gameService.findById(gameId));
             model.addAttribute("object", new GameObject());
-            return "NewGameObject";
+            return "game-object/NewGameObject";
         }
     }
 
@@ -68,7 +67,7 @@ public class ObjectController {
         } else{
             model.addAttribute("games", gameService.findAll());
             model.addAttribute("userId", user.getId());
-            return "UserObjects";
+            return "game-object/UserObjects";
         }
     }
 
@@ -82,7 +81,7 @@ public class ObjectController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the owner of this object");
         } else {
             model.addAttribute("object", gameObjectToUpdate);
-            return "EditGameObject";
+            return "game-object/EditGameObject";
         }
     }
 
@@ -104,7 +103,7 @@ public class ObjectController {
         } else if (!gameObjectToDelete.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the owner of this object");
         } else {
-            return "ConfirmDeleteObject";
+            return "game-object/ConfirmDeleteObject";
         }
     }
 

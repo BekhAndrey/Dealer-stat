@@ -20,19 +20,19 @@ public class GameController {
     @GetMapping
     private String getGames(Model model){
         model.addAttribute("games", gameService.findAll());
-        return "GamesPage";
+        return "game/GamesPage";
     }
 
     @GetMapping("/add")
     private String createGame(Model model){
         model.addAttribute("game", new Game());
-        return "NewGame";
+        return "game/NewGame";
     }
 
     @GetMapping("/{id}/edit")
     private String createGame(Model model, @PathVariable Long id){
         model.addAttribute("game", gameService.findById(id));
-        return "EditGame";
+        return "game/EditGame";
     }
 
     @PostMapping("/add")
@@ -41,7 +41,7 @@ public class GameController {
             errors.rejectValue("name", "name.NotUnique", "Game with such name already exists");
         }
         if(errors.hasErrors()){
-            return "NewGame";
+            return "game/NewGame";
         }
         gameService.save(game);
         return "redirect:/games";
@@ -53,7 +53,7 @@ public class GameController {
             errors.rejectValue("name", "name.NotUnique", "Game with such name already exists");
         }
         if(errors.hasErrors()){
-            return "EditGame";
+            return "game/EditGame";
         }
         Game gameToUpdate = gameService.findById(id);
         gameToUpdate.setName(game.getName());

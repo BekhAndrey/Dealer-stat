@@ -48,7 +48,7 @@ public class GameController {
     }
 
     @PutMapping("/{id}/edit")
-    private String updateGame(@ Valid Game game, Errors errors ,@PathVariable Long id){
+    private String updateGame(@Valid Game game, Errors errors ,@PathVariable Long id){
         if(gameService.findByName(game.getName())!=null){
             errors.rejectValue("name", "name.NotUnique", "Game with such name already exists");
         }

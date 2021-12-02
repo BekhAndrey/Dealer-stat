@@ -47,7 +47,7 @@ public class LoginController {
             return "login/SignInPage";
         }
         model.addAttribute("loggedUser", userService.findUserByEmail(user.getEmail()));
-        return "ResultTest";
+        return "redirect:/objects";
     }
 
 
@@ -58,14 +58,15 @@ public class LoginController {
     }
 
     @PostMapping("/sign-up")
-    public String processSignUp(@Valid User user, Errors errors){
+    public String processSignUp(@Valid User user, Errors errors, Model model){
         if(userService.findUserByEmail(user.getEmail())!=null){
             errors.rejectValue("email", "email.notUnique", "This email is already in use.");
         }
         if(errors.hasErrors()){
             return "login/SignUpPage";
         }
+        model.addAttribute("loggedUser", user);
         userService.save(user);
-        return "SignUpTest";
+        return "redirect:/objects";
     }
 }

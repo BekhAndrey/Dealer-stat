@@ -36,7 +36,7 @@ public class GameController {
     }
 
     @PostMapping("/add")
-    private String addGame(@Valid @ModelAttribute("game") Game game, Errors errors){
+    private String addGame(@Valid Game game, Errors errors){
         if(gameService.findByName(game.getName())!=null){
             errors.rejectValue("name", "name.NotUnique", "Game with such name already exists");
         }

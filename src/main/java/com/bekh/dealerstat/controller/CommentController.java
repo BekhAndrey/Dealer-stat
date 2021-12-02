@@ -63,7 +63,7 @@ public class CommentController {
         } else if (!commentToDelete.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         } else {
-            return "ConfirmDelete";
+            return "ConfirmDeleteComment";
         }
     }
 

@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users/{traderId}/comments")
@@ -36,7 +39,8 @@ public class CommentController {
     }
 
     @GetMapping("/add")
-    public String addCommentForm(@PathVariable("traderId") Long traderId, @SessionAttribute("loggedUser") User user, Model model) {
+    public String addCommentForm(@PathVariable("traderId") Long traderId,
+                                 @SessionAttribute("loggedUser") User user, Model model) {
         if (user.getId() == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
         }
@@ -44,11 +48,15 @@ public class CommentController {
         return "comment/NewComment";
     }
 
-    @PostMapping
-    public String addComment(@SessionAttribute("loggedUser") User user, @PathVariable("traderId") Long traderId, Comment comment, Model model) {
+    @PostMapping("/add")
+    public String addComment(@SessionAttribute("loggedUser") User user,
+                             @PathVariable("traderId") Long traderId,
+                             @Valid Comment comment, Errors errors) {
+        if(errors.hasErrors()){
+            return "comment/NewComment";
+        }
         comment.setAuthor(user);
         comment.setTrader(userService.findById(traderId));
-        model.addAttribute("comment", comment);
         commentService.save(comment);
         return "redirect:/users/{traderId}/comments";
     }
@@ -56,7 +64,7 @@ public class CommentController {
     @GetMapping("/{id}/delete")
     public String confirmDelete(@PathVariable("traderId") Long traderId,
                                 @PathVariable("id") Long commentId,
-                                @SessionAttribute("loggedUser") User user, Model model) {
+                                @SessionAttribute("loggedUser") User user) {
         Comment commentToDelete = commentService.findByIdAndTraderId(commentId, traderId);
         if (user.getId() == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
@@ -89,9 +97,13 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/edit")
     public String updateComment(@PathVariable("traderId") Long traderId,
-                                @PathVariable("id") Long commentId, Comment comment) {
+                                @PathVariable("id") Long commentId,
+                                @Valid Comment comment, Errors errors) {
+        if(errors.hasErrors()){
+            return "comment/EditComment";
+        }
         Comment commentToUpdate = commentService.findByIdAndTraderId(commentId, traderId);
         commentToUpdate.setMessage(comment.getMessage());
         commentService.save(commentToUpdate);

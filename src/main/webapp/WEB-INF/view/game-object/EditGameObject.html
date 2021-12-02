@@ -6,11 +6,11 @@
 </head>
 <body>
 <form th:method="Put"
-      th:action="@{/objects/{objectId}(objectId=${id})}"
-      th:object="${object}">
-    <label for="message">Title</label>
-    <input id="message" type="text" th:field="*{title}">
-    <!--    <div style="color: red;" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</div>-->
+      th:action="@{/objects/{objectId}/edit(objectId=${id})}"
+      th:object="${gameObject}">
+    <label for="title">Title</label>
+    <input id="title" type="text" th:field="*{title}">
+    <div style="color: red;" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
     <br>
     <div class="form-group">
         <div class="row">

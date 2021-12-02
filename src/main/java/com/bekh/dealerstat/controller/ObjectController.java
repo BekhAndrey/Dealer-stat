@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 
@@ -35,25 +37,28 @@ public class ObjectController {
             return "game-object/AllGameObjects";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/game/{gameId}/add")
     public String addObjectForm(@SessionAttribute("loggedUser") User user,
-                                @RequestParam("gameId") Long gameId, Model model ){
+                                @PathVariable("gameId") Long gameId, Model model ){
         if (user.getId() == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
         } else if (user.getRole()!= UserRole.TRADER) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the trader");
-        } else {
-            model.addAttribute("game", gameService.findById(gameId));
-            model.addAttribute("object", new GameObject());
-            return "game-object/NewGameObject";
         }
+            //model.addAttribute("game", gameService.findById(gameId));
+            model.addAttribute("gameObject", new GameObject());
+            return "game-object/NewGameObject";
     }
 
-    @PostMapping("/game/{id}")
+    @PostMapping("/game/{gameId}/add")
     public String addObject(@SessionAttribute("loggedUser") User user,
-                            @PathVariable("id") Long id, GameObject gameObject){
+                            @PathVariable("gameId") Long gameId,
+                            @Valid GameObject gameObject, Errors errors){
+        if(errors.hasErrors()){
+            return "game-object/NewGameObject";
+        }
         gameObject.setAuthor(user);
-        gameObject.setGame(gameService.findById(id));
+        gameObject.setGame(gameService.findById(gameId));
         gameObjectService.save(gameObject);
         return "redirect:/objects/my";
     }
@@ -73,20 +78,24 @@ public class ObjectController {
 
     @GetMapping("/{id}/edit")
     public String updateObjectForm(@PathVariable("id") Long objectId,
-                                 @SessionAttribute("loggedUser") User user, Model model){
+                                   @SessionAttribute("loggedUser") User user, Model model){
         GameObject gameObjectToUpdate = gameObjectService.findById(objectId);
         if (user.getId() == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
         } else if (!gameObjectToUpdate.getAuthor().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the owner of this object");
         } else {
-            model.addAttribute("object", gameObjectToUpdate);
+            model.addAttribute("gameObject", gameObjectToUpdate);
             return "game-object/EditGameObject";
         }
     }
 
-    @PutMapping("/{id}")
-    public String updateObject(@PathVariable("id") Long objectId, GameObject gameObject) {
+    @PutMapping("/{id}/edit")
+    public String updateObject(@PathVariable("id") Long objectId,
+                               @Valid GameObject gameObject, Errors errors) {
+        if(errors.hasErrors()){
+            return "game-object/EditGameObject";
+        }
         GameObject gameObjectToUpdate = gameObjectService.findById(objectId);
         gameObjectToUpdate.setTitle(gameObject.getTitle());
         gameObjectToUpdate.setUpdatedAt(LocalDate.now());

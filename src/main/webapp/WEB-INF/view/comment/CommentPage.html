@@ -9,17 +9,17 @@
 <div>
     <div>
         <h2>Trader</h2>
-        <label for="trader-first-name">Trader First Name:</label>
+        <label for="trader-first-name">First Name:</label>
         <span id="trader-first-name" th:text="${comment.getTrader().getFirstName()}"></span>
         <br>
-        <label for="trader-last-name">Trader Last Name:</label>
+        <label for="trader-last-name">Last Name:</label>
         <span id="trader-last-name" th:text="${comment.getTrader().getLastName()}"></span>
     </div>
     <h3>Comment</h3>
-    <label for="comment-message">Comment message:</label>
+    <label for="comment-message">Message:</label>
     <span id="comment-message" th:text="${comment.getMessage()}"></span>
     <br>
-    <label for="comment-created-at">Comment creation date:</label>
+    <label for="comment-created-at">Creation date:</label>
     <span id="comment-created-at" th:text="${comment.getCreatedAt()}"></span>
 </div>
 </body>

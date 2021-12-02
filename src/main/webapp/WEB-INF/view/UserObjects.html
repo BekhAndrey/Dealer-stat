@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My objects</title>
+</head>
+<body>
+<div th:each="game : ${games}">
+    <h3 id="game-name" th:text="${game.getName()}"></h3>
+    <div th:each="object: ${game.getGameObjects()}">
+        <div th:if="${object.getAuthor().getId() eq userId}">
+            <label for="title">Title:</label>
+            <span id="title" th:text="${object.getTitle()}"></span>
+            <br>
+            <label for="created-at">Created at:</label>
+            <span id="created-at" th:text="${object.getCreatedAt()}"></span>
+            <br>
+            <label for="updated-at">Updated at:</label>
+            <span id="updated-at" th:text="${object.getUpdatedAt()}"></span>
+            <br>
+            <a th:href="@{/objects/{objectId}/edit(objectId=${object.getId()})}">
+                <button>Update</button>
+            </a>
+            <a th:href="@{/objects/{objectId}/delete(objectId=${object.getId()})}">
+                <button>Delete</button>
+            </a>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+</body>
+</html>

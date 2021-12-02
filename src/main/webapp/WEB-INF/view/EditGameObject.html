@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit object</title>
+</head>
+<body>
+<form th:method="Put"
+      th:action="@{/objects/{objectId}(objectId=${id})}"
+      th:object="${object}">
+    <label for="message">Title</label>
+    <input id="message" type="text" th:field="*{title}">
+    <!--    <div style="color: red;" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</div>-->
+    <br>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit"
+                       name="update-submit"
+                       id="update-submit"
+                       class="form-control btn btn-info"
+                       value="Update">
+            </div>
+        </div>
+    </div>
+</form>
+<a th:href="@{/objects/my}">
+    <button>Cancel</button>
+</a>
+</body>
+</html>

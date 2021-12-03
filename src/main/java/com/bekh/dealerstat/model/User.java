@@ -1,6 +1,8 @@
 package com.bekh.dealerstat.model;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -8,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +19,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,8 +39,11 @@ public class User {
     private String email;
 
     @NotBlank(message = "Password cannot be empty.")
-    @Size(min = 8, message = "Password cannot be less than 8 symbols")
+//    @Size(min = 8, message = "Password cannot be less than 8 symbols")
     private String password;
+
+    @Transient
+    private String confirmPassword;
 
     @Column(name = "created_at")
     private LocalDate createdAt = LocalDate.now();
@@ -52,5 +59,35 @@ public class User {
 
     @OneToMany(mappedBy = "trader", fetch = FetchType.EAGER)
     private Set<Comment> receivedComments;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(role);
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
 

@@ -1,12 +1,11 @@
 package com.bekh.dealerstat.controller;
 
-
 import com.bekh.dealerstat.model.Comment;
-import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.service.CommentService;
 import com.bekh.dealerstat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -39,23 +38,19 @@ public class CommentController {
     }
 
     @GetMapping("/add")
-    public String addCommentForm(@PathVariable("traderId") Long traderId,
-                                 @SessionAttribute("loggedUser") User user, Model model) {
-        if (user.getId() == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
-        }
+    public String addCommentForm(@PathVariable("traderId") Long traderId, Model model) {
         model.addAttribute("comment", new Comment());
         return "comment/NewComment";
     }
 
     @PostMapping("/add")
-    public String addComment(@SessionAttribute("loggedUser") User user,
-                             @PathVariable("traderId") Long traderId,
-                             @Valid Comment comment, Errors errors) {
+    public String addComment(@PathVariable("traderId") Long traderId,
+                             @Valid Comment comment, Errors errors,
+                             Authentication authentication) {
         if(errors.hasErrors()){
             return "comment/NewComment";
         }
-        comment.setAuthor(user);
+        comment.setAuthor(userService.findUserByEmail(authentication.getName()));
         comment.setTrader(userService.findById(traderId));
         commentService.save(comment);
         return "redirect:/users/{traderId}/comments";
@@ -64,15 +59,13 @@ public class CommentController {
     @GetMapping("/{id}/delete")
     public String confirmDelete(@PathVariable("traderId") Long traderId,
                                 @PathVariable("id") Long commentId,
-                                @SessionAttribute("loggedUser") User user) {
+                                Authentication authentication) {
         Comment commentToDelete = commentService.findByIdAndTraderId(commentId, traderId);
-        if (user.getId() == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
-        } else if (!commentToDelete.getAuthor().getId().equals(user.getId())) {
+        if (!commentToDelete.getAuthor().getId()
+                .equals(userService.findUserByEmail(authentication.getName()).getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
-        } else {
-            return "comment/ConfirmDeleteComment";
         }
+        return "comment/ConfirmDeleteComment";
     }
 
     @DeleteMapping("/{id}")
@@ -85,16 +78,14 @@ public class CommentController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable("traderId") Long traderId,
                            @PathVariable("id") Long commentId,
-                           @SessionAttribute("loggedUser") User user, Model model) {
+                           Authentication authentication, Model model) {
         Comment commentToEdit = commentService.findByIdAndTraderId(commentId, traderId);
-        if (user.getId() == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorised");
-        } else if (!commentToEdit.getAuthor().getId().equals(user.getId())) {
+        if (!commentToEdit.getAuthor().getId()
+                .equals(userService.findUserByEmail(authentication.getName()).getId())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
-        } else {
+        }
             model.addAttribute("comment", commentToEdit);
             return "comment/EditComment";
-        }
     }
 
     @PutMapping("/{id}/edit")
@@ -109,5 +100,4 @@ public class CommentController {
         commentService.save(commentToUpdate);
         return "redirect:/users/{traderId}/comments/{id}";
     }
-
 }

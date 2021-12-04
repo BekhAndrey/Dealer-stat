@@ -17,4 +17,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
     List<Comment> findAllByTraderId(Long traderId);
 
     Optional<Comment> findByIdAndTraderId(Long id, Long traderId);
+
+    List<Comment> findAllByApproved(Boolean approved);
+
+    List<Comment> findAllByTraderIdAndApproved(Long traderId, Boolean approved);
 }

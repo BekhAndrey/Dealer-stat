@@ -31,19 +31,33 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    public Comment findByAuthorId(Long authorId) { return commentRepository.findByAuthorId(authorId);}
+    public Comment findByAuthorId(Long authorId) {
+        return commentRepository.findByAuthorId(authorId);
+    }
 
     public Comment findByIdAndAuthorId(Long id, Long authorId) {
         return commentRepository.findByIdAndAuthorId(id, authorId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
     }
 
-    public Comment findByTraderId(Long traderId) { return commentRepository.findByTraderId(traderId);}
+    public Comment findByTraderId(Long traderId) {
+        return commentRepository.findByTraderId(traderId);
+    }
 
-    public List<Comment> findAllByTraderId(Long traderId){ return commentRepository.findAllByTraderId(traderId);}
+    public List<Comment> findAllByTraderId(Long traderId) {
+        return commentRepository.findAllByTraderId(traderId);
+    }
 
     public Comment findByIdAndTraderId(Long id, Long traderId) {
         return commentRepository.findByIdAndTraderId(id, traderId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+    }
+
+    public List<Comment> findAllByApproved(Boolean approved) {
+        return commentRepository.findAllByApproved(approved);
+    }
+
+    public List<Comment> findAllByTraderIdAndApproved(Long traderId, Boolean approved) {
+        return commentRepository.findAllByTraderIdAndApproved(traderId, approved);
     }
 }

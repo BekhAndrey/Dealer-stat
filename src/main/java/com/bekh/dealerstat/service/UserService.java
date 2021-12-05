@@ -32,6 +32,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByEmailAndPassword(email, password);
     }
 
+    public User findUserByEmailAndPasswordAndApproved(String email, String password, Boolean approved) {
+        return userRepository.findUserByEmailAndPasswordAndApproved(email, password, approved);
+    }
+
     public List<User> findAll() {
         return (List<User>) userRepository.findAll();
     }
@@ -40,7 +44,16 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
     }
 
-    public void save(User user) {
+    public void create(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    public void update(User user){
+        userRepository.save(user);
+    }
+
+    public void updatePassword(User user){
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }

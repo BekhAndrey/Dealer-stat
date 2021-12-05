@@ -19,6 +19,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     UserService userService;
 
     @Autowired
+    private CustomAuthenticationProvider authProvider;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
@@ -29,21 +32,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authProvider);
+    }
 
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/admin/**").hasAuthority("ADMIN")
                 .mvcMatchers("/objects/*/**").hasAuthority("TRADER")
                 .mvcMatchers("/games/**").hasAnyAuthority("ADMIN", "TRADER")
-                .mvcMatchers("/users/**/add", "/users/**/delete", "/users/**/edit").authenticated()
+                .mvcMatchers("/games", "/users/**/add", "/users/**/delete", "/users/**/edit").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/objects",true)
+                .defaultSuccessUrl("/objects", true)
                 .permitAll()
                 .and()
                 .logout()
                 .permitAll();
     }
-
 }

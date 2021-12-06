@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Not approved objects</title>
+</head>
+<body>
+<div th:each="object : ${objects}">
+    <label for="game">Game:</label>
+    <span id="game" th:text="${object.getGame().getName()}"></span>
+    <br>
+    <label for="title">Title:</label>
+    <span id="title" th:text="${object.getTitle()}"></span>
+    <br>
+    <a th:href="@{/admin/objects/{objectId}/approve(objectId=${object.getId()})}">
+        <button>Approve</button>
+    </a>
+</div>
+</body>
+</html>

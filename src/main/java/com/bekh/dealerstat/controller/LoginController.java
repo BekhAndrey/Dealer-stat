@@ -1,12 +1,10 @@
 package com.bekh.dealerstat.controller;
 
 import com.bekh.dealerstat.model.Comment;
+import com.bekh.dealerstat.model.GameObject;
 import com.bekh.dealerstat.model.ResetForm;
 import com.bekh.dealerstat.model.User;
-import com.bekh.dealerstat.service.CommentService;
-import com.bekh.dealerstat.service.EmailService;
-import com.bekh.dealerstat.service.GameService;
-import com.bekh.dealerstat.service.UserService;
+import com.bekh.dealerstat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,11 +18,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @Controller
-@SessionAttributes({"loggedUser"})
 public class LoginController {
-
-    @Autowired
-    private CommentService commentService;
 
     @Autowired
     private EmailService emailService;
@@ -53,7 +47,7 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public String processSignUp(@Valid User user, Errors errors, Model model) {
+    public String processSignUp(@Valid User user, Errors errors) {
         if (userService.findUserByEmail(user.getEmail()) != null) {
             errors.rejectValue("email", "email.notUnique", "This email is already in use.");
         }
@@ -83,6 +77,9 @@ public class LoginController {
     public String confirmEmail(String code) {
         String email;
         try (Jedis jedis = jedisPool.getResource()) {
+            if(jedis.get(code)==null){
+                return "redirect:/registration/confirm-email?error";
+            }
             email = jedis.get(code);
         }
         User userToApprove = userService.findUserByEmail(email);
@@ -136,25 +133,5 @@ public class LoginController {
         userToUpdate.setPassword(resetForm.getNewPassword());
         userService.updatePassword(userToUpdate);
         return "redirect:/login";
-    }
-
-    @GetMapping("/admin/comments")
-    public String notApprovedComments(Model model) {
-        model.addAttribute("comments", commentService.findAllByApproved(false));
-        return "credentials/NotApprovedComments";
-    }
-
-    @GetMapping("/admin/comments/{id}/approve")
-    public String confirmApprove(@PathVariable("id") Long commentId, Model model) {
-        model.addAttribute("comments", commentService.findAllByApproved(false));
-        return "credentials/ConfirmApprove";
-    }
-
-    @PutMapping("/admin/comments/{id}/approve")
-    public String approveComment(@PathVariable("id") Long commentId, Model model) {
-        Comment commentToApprove = commentService.findById(commentId);
-        commentToApprove.setApproved(true);
-        commentService.save(commentToApprove);
-        return "redirect:/admin/comments";
     }
 }

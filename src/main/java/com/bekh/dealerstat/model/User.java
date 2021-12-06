@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -39,7 +38,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotBlank(message = "Password cannot be empty.")
-//    @Size(min = 8, message = "Password cannot be less than 8 symbols")
+    @Size(min = 8, message = "Password cannot be less than 8 symbols")
     private String password;
 
     @Transient
@@ -50,6 +49,8 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private Boolean approved = false;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private Set<GameObject> gameObjects;

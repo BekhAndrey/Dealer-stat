@@ -15,13 +15,15 @@
     <br>
     <h3>Game Objects</h3>
     <div th:each="object: ${user.getGameObjects()}">
-        <label for="game-name">Game:</label>
-        <span id="game-name" th:text="${object.getGame().getName()}"></span>
-        <br>
-        <label for="object-title">Title:</label>
-        <span id="object-title" th:text="${object.getTitle()}"></span>
-        <br>
-        <br>
+        <div th:if="${object.getApproved() eq true}">
+            <label for="game-name">Game:</label>
+            <span id="game-name" th:text="${object.getGame().getName()}"></span>
+            <br>
+            <label for="object-title">Title:</label>
+            <span id="object-title" th:text="${object.getTitle()}"></span>
+            <br>
+            <br>
+        </div>
     </div>
     <a th:href="@{/users/{traderId}/comments(traderId= ${user.getId()})}">
     <button>Comments</button>

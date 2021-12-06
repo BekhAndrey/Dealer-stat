@@ -26,7 +26,7 @@ public class CommentController {
 
     @GetMapping()
     public String getTraderComments(@PathVariable("traderId") Long traderId, Model model) {
-        model.addAttribute("comments", commentService.findAllByTraderId(userService.findById(traderId).getId()));
+        model.addAttribute("comments", commentService.findAllByTraderIdAndApproved(userService.findById(traderId).getId(), true));
         return "comment/CommentsPage";
     }
 
@@ -47,7 +47,7 @@ public class CommentController {
     public String addComment(@PathVariable("traderId") Long traderId,
                              @Valid Comment comment, Errors errors,
                              Authentication authentication) {
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             return "comment/NewComment";
         }
         comment.setAuthor(userService.findUserByEmail(authentication.getName()));
@@ -81,22 +81,23 @@ public class CommentController {
                            Authentication authentication, Model model) {
         Comment commentToEdit = commentService.findByIdAndTraderId(commentId, traderId);
         if (!commentToEdit.getAuthor().getId()
-                .equals(userService.findUserByEmail(authentication.getName()).getId())){
+                .equals(userService.findUserByEmail(authentication.getName()).getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author of this comment");
         }
-            model.addAttribute("comment", commentToEdit);
-            return "comment/EditComment";
+        model.addAttribute("comment", commentToEdit);
+        return "comment/EditComment";
     }
 
     @PutMapping("/{id}/edit")
     public String updateComment(@PathVariable("traderId") Long traderId,
                                 @PathVariable("id") Long commentId,
                                 @Valid Comment comment, Errors errors) {
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             return "comment/EditComment";
         }
         Comment commentToUpdate = commentService.findByIdAndTraderId(commentId, traderId);
         commentToUpdate.setMessage(comment.getMessage());
+        commentToUpdate.setApproved(false);
         commentService.save(commentToUpdate);
         return "redirect:/users/{traderId}/comments/{id}";
     }

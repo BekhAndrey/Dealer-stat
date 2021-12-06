@@ -25,12 +25,12 @@ public class AdminController {
     @GetMapping("/comments")
     public String notApprovedComments(Model model) {
         model.addAttribute("comments", commentService.findAllByApproved(false));
-        return "credentials/NotApprovedComments";
+        return "comment/NotApprovedComments";
     }
 
     @GetMapping("/comments/{id}/approve")
     public String confirmApproveComment(@PathVariable("id") Long commentId) {
-        return "credentials/ConfirmApprove";
+        return "comment/ConfirmApprove";
     }
 
     @PutMapping("/comments/{id}/approve")

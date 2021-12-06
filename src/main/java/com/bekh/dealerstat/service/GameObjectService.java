@@ -22,7 +22,7 @@ public class GameObjectService {
 
     public GameObject findById(Long id) {
         return gameObjectRepository.findById(id)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
     }
 
     public void save(GameObject gameObject) {
@@ -39,6 +39,10 @@ public class GameObjectService {
 
     public GameObject findByIdAndAuthorId(Long id, Long authorId) {
         return gameObjectRepository.findByIdAndAuthorId(id, authorId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find the resource"));
+    }
+
+    public List<GameObject> findAllByApproved(Boolean approved) {
+        return gameObjectRepository.findAllByApproved(approved);
     }
 }

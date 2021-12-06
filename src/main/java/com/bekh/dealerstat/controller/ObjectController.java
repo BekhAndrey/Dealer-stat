@@ -84,13 +84,13 @@ public class ObjectController {
         GameObject gameObjectToUpdate = gameObjectService.findById(objectId);
         gameObjectToUpdate.setTitle(gameObject.getTitle());
         gameObjectToUpdate.setUpdatedAt(LocalDate.now());
+        gameObjectToUpdate.setApproved(false);
         gameObjectService.save(gameObjectToUpdate);
         return "redirect:/objects/my";
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteObjectForm(@PathVariable("id") Long objectId,
-                                   Authentication authentication, Model model) {
+    public String deleteObjectForm(@PathVariable("id") Long objectId, Authentication authentication) {
         GameObject gameObjectToDelete = gameObjectService.findById(objectId);
         if (!gameObjectToDelete.getAuthor().getId()
                 .equals(userService.findUserByEmail(authentication.getName()).getId())) {

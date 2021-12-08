@@ -23,7 +23,7 @@
 ### Game Objects:
 *  `GET: /objects` - get all objects
 *  `GET: /objects/my` - get logged trader objects
-*  `POST: /objects/game/{gameId}/add` - add new game object 
+*  `POST: /objects/add` - add new game object 
 *  `PUT: /objects/{id}/edit` - edit object
 *  `DELETE /objects/{id}` - delete object
 ### Admin options:

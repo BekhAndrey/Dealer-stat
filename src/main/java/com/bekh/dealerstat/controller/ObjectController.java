@@ -22,14 +22,17 @@ import java.time.LocalDate;
 @RequestMapping("/objects")
 public class ObjectController {
 
-    @Autowired
-    private GameObjectService gameObjectService;
+    private final GameObjectService gameObjectService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
+
+    public ObjectController(GameObjectService gameObjectService, UserService userService, GameService gameService) {
+        this.gameObjectService = gameObjectService;
+        this.userService = userService;
+        this.gameService = gameService;
+    }
 
     @GetMapping()
     public String getAllObjects(Model model) {
@@ -37,21 +40,21 @@ public class ObjectController {
         return "game-object/AllGameObjects";
     }
 
-    @GetMapping("/game/{gameId}/add")
-    public String addObjectForm(@PathVariable("gameId") Long gameId, Model model) {
+    @GetMapping("/add")
+    public String addObjectForm(Model model) {
         model.addAttribute("gameObject", new GameObject());
+        model.addAttribute("games", gameService.findAll());
         return "game-object/NewGameObject";
     }
 
-    @PostMapping("/game/{gameId}/add")
-    public String addObject(@PathVariable("gameId") Long gameId,
-                            @Valid GameObject gameObject,
+    @PostMapping("/add")
+    public String addObject(@Valid GameObject gameObject, String gameName,
                             Authentication authentication, Errors errors) {
         if (errors.hasErrors()) {
             return "game-object/NewGameObject";
         }
         gameObject.setAuthor(userService.findUserByEmail(authentication.getName()));
-        gameObject.setGame(gameService.findById(gameId));
+        gameObject.setGame(gameService.findByName(gameName));
         gameObjectService.save(gameObject);
         return "redirect:/objects/my";
     }

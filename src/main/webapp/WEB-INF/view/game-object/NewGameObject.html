@@ -5,10 +5,15 @@
     <title>New game object</title>
 </head>
 <body>
-<form method="post" th:action="@{/objects/game/{id}/add(id=${gameId})}" th:object="${gameObject}">
+<form method="post" th:action="@{/objects/add}" th:object="${gameObject}">
     <label for="title">Title</label>
     <input id="title" type="text" th:field="*{title}">
     <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
+    <select name="gameName">
+        <option th:each="game : ${games}"
+                th:value="${game.getName()}"
+                th:text="${game.getName()}"></option>
+    </select>
     <br>
     <div class="form-group">
         <div class="row">

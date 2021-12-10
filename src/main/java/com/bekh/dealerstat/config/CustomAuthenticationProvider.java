@@ -23,7 +23,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private UserService userService;
 
     @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

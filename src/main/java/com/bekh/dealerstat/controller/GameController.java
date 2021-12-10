@@ -2,7 +2,6 @@ package com.bekh.dealerstat.controller;
 
 import com.bekh.dealerstat.model.Game;
 import com.bekh.dealerstat.service.GameService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,8 +14,11 @@ import javax.validation.Valid;
 @RequestMapping("/games")
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @GetMapping
     private String getGames(Model model) {

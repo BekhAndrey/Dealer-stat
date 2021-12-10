@@ -18,11 +18,14 @@ import javax.validation.Valid;
 @RequestMapping("/users/{traderId}/comments")
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public CommentController(CommentService commentService, UserService userService) {
+        this.commentService = commentService;
+        this.userService = userService;
+    }
 
     @GetMapping()
     public String getTraderComments(@PathVariable("traderId") Long traderId, Model model) {

@@ -1,9 +1,7 @@
 package com.bekh.dealerstat.service;
 
 import com.bekh.dealerstat.model.GameObject;
-import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.repository.GameObjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,8 +11,11 @@ import java.util.List;
 @Service("gameObjectService")
 public class GameObjectService {
 
-    @Autowired
-    private GameObjectRepository gameObjectRepository;
+    private final GameObjectRepository gameObjectRepository;
+
+    public GameObjectService(GameObjectRepository gameObjectRepository) {
+        this.gameObjectRepository = gameObjectRepository;
+    }
 
     public List<GameObject> findAll() {
         return (List<GameObject>) gameObjectRepository.findAll();

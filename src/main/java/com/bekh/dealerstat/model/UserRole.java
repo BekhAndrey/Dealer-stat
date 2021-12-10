@@ -9,7 +9,7 @@ public enum UserRole implements GrantedAuthority {
     ROLE_TRADER("TRADER"),
     ROLE_ANONYMOUS("ANONYMOUS");
 
-    private String roleName;
+    private final String roleName;
 
     UserRole(String roleName){
         this.roleName=roleName;

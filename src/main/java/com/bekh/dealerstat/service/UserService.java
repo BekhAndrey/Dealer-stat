@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder bCryptPasswordEncoder;
 
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);

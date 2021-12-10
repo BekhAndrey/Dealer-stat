@@ -1,12 +1,10 @@
 package com.bekh.dealerstat.controller;
 
 import com.bekh.dealerstat.model.GameObject;
-import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.model.UserRole;
 import com.bekh.dealerstat.service.GameObjectService;
 import com.bekh.dealerstat.service.GameService;
 import com.bekh.dealerstat.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

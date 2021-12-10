@@ -1,12 +1,8 @@
 package com.bekh.dealerstat.controller;
 
-import com.bekh.dealerstat.model.Comment;
-import com.bekh.dealerstat.model.GameObject;
 import com.bekh.dealerstat.model.ResetForm;
 import com.bekh.dealerstat.model.User;
 import com.bekh.dealerstat.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -20,20 +16,23 @@ import java.util.UUID;
 @Controller
 public class LoginController {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JedisPool jedisPool;
+    private final JedisPool jedisPool;
 
     private static final String CONFIRM_EMAIL_SUBJECT = "Confirm your email address";
     private static final String CONFIRM_EMAIL_MESSAGE = "Use this code to confirm your email:\n";
     private static final String RESET_PASSWORD_SUBJECT = "Reset your password";
     private static final String RESET_PASSWORD_MESSAGE = "Use this code to reset your password:\n";
     private static final int DAY = 86400;
+
+    public LoginController(EmailService emailService, UserService userService, JedisPool jedisPool) {
+        this.emailService = emailService;
+        this.userService = userService;
+        this.jedisPool = jedisPool;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -57,7 +56,6 @@ public class LoginController {
         if (errors.hasErrors()) {
             return "credentials/SignUpPage";
         }
-        user.setPassword(user.getPassword());
         userService.create(user);
         String code = UUID.randomUUID().toString();
         try (Jedis jedis = jedisPool.getResource()) {
@@ -65,7 +63,7 @@ public class LoginController {
             jedis.expire(code, DAY);
         }
         emailService.sendSimpleMessage(user.getEmail(), CONFIRM_EMAIL_SUBJECT, CONFIRM_EMAIL_MESSAGE + code);
-        return "credentials/ConfirmEmail";
+        return "redirect:/registration/confirm-email";
     }
 
     @GetMapping("/registration/confirm-email")
@@ -81,6 +79,7 @@ public class LoginController {
                 return "redirect:/registration/confirm-email?error";
             }
             email = jedis.get(code);
+            jedis.del(code);
         }
         User userToApprove = userService.findUserByEmail(email);
         userToApprove.setApproved(true);

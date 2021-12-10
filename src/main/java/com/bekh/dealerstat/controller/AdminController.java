@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Autowired
-    private GameObjectService gameObjectService;
+    private final GameObjectService gameObjectService;
+
+    public AdminController(CommentService commentService, GameObjectService gameObjectService) {
+        this.commentService = commentService;
+        this.gameObjectService = gameObjectService;
+    }
 
     @GetMapping("/comments")
     public String notApprovedComments(Model model) {
@@ -41,6 +44,18 @@ public class AdminController {
         return "redirect:/admin/comments";
     }
 
+    @GetMapping("/comments/{id}/decline")
+    public String confirmDeclineComment(@PathVariable("id") Long commentId) {
+        return "comment/ConfirmDecline";
+    }
+
+    @PutMapping("/comments/{id}/decline")
+    public String declineComment(@PathVariable("id") Long commentId) {
+        Comment commentToDecline = commentService.findById(commentId);
+        commentService.delete(commentToDecline);
+        return "redirect:/admin/comments";
+    }
+
     @GetMapping("/objects")
     public String notApprovedObjects(Model model) {
         model.addAttribute("objects", gameObjectService.findAllByApproved(false));
@@ -57,6 +72,18 @@ public class AdminController {
         GameObject gameObjectToApprove = gameObjectService.findById(objectId);
         gameObjectToApprove.setApproved(true);
         gameObjectService.save(gameObjectToApprove);
+        return "redirect:/admin/objects";
+    }
+
+    @GetMapping("/objects/{id}/decline")
+    public String confirmDeclineObject(@PathVariable("id") Long commentId) {
+        return "game-object/ConfirmDeclineObject";
+    }
+
+    @PutMapping("/objects/{id}/decline")
+    public String declineObject(@PathVariable("id") Long objectId) {
+        GameObject gameObjectToDecline = gameObjectService.findById(objectId);
+        gameObjectService.delete(gameObjectToDecline);
         return "redirect:/admin/objects";
     }
 }

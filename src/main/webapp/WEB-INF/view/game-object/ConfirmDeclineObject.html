@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Decline object</title>
+</head>
+<body>
+<form th:method="Put" th:action="@{/admin/objects/{objectId}/decline(objectId=${id})}">
+    <h3>Are you sure you want to decline this object?</h3>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit"
+                       name="delete-submit"
+                       id="delete-submit"
+                       class="form-control btn btn-info"
+                       value="Decline">
+            </div>
+        </div>
+    </div>
+</form>
+<a th:href="@{/admin/objects}">
+    <button>Cancel</button>
+</a>
+</body>
+</html>

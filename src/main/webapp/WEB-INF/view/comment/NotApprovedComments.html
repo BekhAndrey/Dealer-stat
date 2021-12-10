@@ -8,6 +8,9 @@
 <div th:each="comment : ${comments}">
     <a th:href="@{/admin/comments/{commentId}/approve(commentId=${comment.getId()})}"
        th:text="${comment.getMessage()}"/>
+    <a th:href="@{/admin/comments/{commentId}/decline(commentId=${comment.getId()})}">
+        <button>Decline</button>
+    </a>
 </div>
 </body>
 </html>

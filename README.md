@@ -1,10 +1,10 @@
 
 # Dealer-stat
-## The application allow traders to list their game objects and recieve comments from anonymous users.
-## Comments can be created only by logged users.
-## Game objects can be added only by traders, deleted and updated only by object owner.
-## Each comment and game object has to be approved by the admin user.
-## Each new user has to confirm their email by entering the verification code sent to it.
+The application allow traders to list their game objects and recieve comments from anonymous users.
+Comments can be created only by logged users.
+Game objects can be added only by traders, deleted and updated only by object owner.
+Each comment and game object has to be approved by the admin user.
+Each new user has to confirm their email by entering the verification code sent to it.
 ### Endpoints.
 #### Login:
 *  `POST: /registration` - create account;
